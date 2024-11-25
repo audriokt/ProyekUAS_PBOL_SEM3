@@ -42,8 +42,4 @@ public class Pelanggan {
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
     }
-    
-
-
-
 }
