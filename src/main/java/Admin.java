@@ -23,4 +23,33 @@ public class Admin {
         produk.setStok(stokBaru);
     }
 
+    public void hapusProduk(Produk produk){
+        //logika
+        System.out.println("Produk " + produk.getName() + " berhasil dihapus.");
+    }
+
+    public void perbaruiStokProduk(Produk produk, int stokBaru){
+        //logika
+        produk.setStok(stokBaru);
+        System.out.println("Stok produk " + produk.getName() + " berhasil diperbarui.");
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+    public String getAdminName() {
+        return adminName;
+    }
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+    public String getAdminEmail() {
+        return adminEmail;
+    }
+    public void setAdminEmail(String adminEmail) {
+        this.adminEmail = adminEmail;
+    }
 }
