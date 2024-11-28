@@ -1,45 +1,45 @@
 public class Pelanggan {
-    private String customerId;
-    private String customerName;
-    private String customerAddress;
-    private String customerPhone;
-    private String customerEmail;
+    private String idPelanggan;
+    private String namaPelanggan;
+    private String alamatPelanggan;
+    private String teleponPelanggan;
+    private String emailpelanggan;
 
     public Pelanggan(String customerId, String customerName, String customerAddress, String customerPhone, String customerEmail) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.customerAddress = customerAddress;
-        this.customerPhone = customerPhone;
-        this.customerEmail = customerEmail;
+        this.idPelanggan = customerId;
+        this.namaPelanggan = customerName;
+        this.alamatPelanggan = customerAddress;
+        this.teleponPelanggan = customerPhone;
+        this.emailpelanggan = customerEmail;
     }
-    public String getCustomerId() {
-        return customerId;
+    public String getIdPelanggan() {
+        return idPelanggan;
     }
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setIdPelanggan(String customerId) {
+        this.idPelanggan = customerId;
     }
-    public String getCustomerName() {
-        return customerName;
+    public String getNamaPelanggan() {
+        return namaPelanggan;
     }
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setNamaPelanggan(String customerName) {
+        this.namaPelanggan = customerName;
     }
-    public String getCustomerAddress() {
-        return customerAddress;
+    public String getAlamatPelanggan() {
+        return alamatPelanggan;
     }
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
+    public void setAlamatPelanggan(String customerAddress) {
+        this.alamatPelanggan = customerAddress;
     }
-    public String getCustomerPhone() {
-        return customerPhone;
+    public String getTeleponPelanggan() {
+        return teleponPelanggan;
     }
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
+    public void setTeleponPelanggan(String customerPhone) {
+        this.teleponPelanggan = customerPhone;
     }
-    public String getCustomerEmail() {
-        return customerEmail;
+    public String getEmailpelanggan() {
+        return emailpelanggan;
     }
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setEmailpelanggan(String customerEmail) {
+        this.emailpelanggan = customerEmail;
     }
 }

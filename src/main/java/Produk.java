@@ -1,13 +1,13 @@
 public class Produk {
     private String produkId;
-    private String produkName;
+    private String produkNama;
     private String produkDeskripsi;
     private double harga;
     private int stok;
 
     public Produk(String produkId, String produkName, String produkDeskripsi, double harga) {
         this.produkId = produkId;
-        this.produkName = produkName;
+        this.produkNama = produkName;
         this.produkDeskripsi = produkDeskripsi;
         this.harga = harga;
         this.stok = 0;
@@ -18,11 +18,11 @@ public class Produk {
     public void setProdukId(String produkId) {
         this.produkId = produkId;
     }
-    public String getProdukName() {
-        return produkName;
+    public String getProdukNama() {
+        return produkNama;
     }
-    public void setProdukName(String produkName) {
-        this.produkName = produkName;
+    public void setProdukNama(String produkName) {
+        this.produkNama = produkName;
     }
     public String getProdukDeskripsi() {
         return produkDeskripsi;
