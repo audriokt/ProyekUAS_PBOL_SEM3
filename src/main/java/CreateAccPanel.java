@@ -1,5 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,17 +38,19 @@ public class CreateAccPanel extends JFrame{
             titlePanel.setOpaque(false);
 
             // Label ODDIV di pojok kiri atas
-            JLabel oddivLabel = new JLabel("ODDIV");
-            oddivLabel.setForeground(Color.WHITE);
-            oddivLabel.setFont(new Font("Arial", Font.BOLD, 24));
+            ImageIcon logoOddiv = new ImageIcon(getClass().getResource("/images/Logo_Oddiv.png"));
+            // Mengubah ukuran ImageIcon
+            Image originalImage = logoOddiv.getImage();
+            Image scaledImage = originalImage.getScaledInstance(110, 70, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            JLabel oddivLabel = new JLabel(scaledIcon);
             titlePanel.add(oddivLabel, BorderLayout.WEST);
 
             // Label Create Account di tengah
-            JLabel titleLabel = new JLabel("Create Account");
-            titleLabel.setForeground(Color.WHITE);
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-            titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            titlePanel.add(titleLabel, BorderLayout.EAST);
+            JLabel createLabel = new JLabel("Create Account");
+            createLabel.setForeground(Color.BLACK);
+            createLabel.setFont(new Font("Arial", Font.BOLD, 24));
+            createLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
             // Panel form create account
             JPanel formPanel = new JPanel();
@@ -56,7 +58,7 @@ public class CreateAccPanel extends JFrame{
             formPanel.setLayout(new GridBagLayout());
             formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(10, 10, 10, 10);  // Margin
+            gbc.insets = new Insets(10, 10, 50, 10);  // Margin
 
             JLabel userLabel = new JLabel("Username:");
             userLabel.setFont(new Font("Arial", Font.BOLD, 12));
@@ -64,13 +66,15 @@ public class CreateAccPanel extends JFrame{
             JTextField userField = new JTextField(15);
             userField.setBackground(Color.WHITE);
             userField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            userField.setBorder(new LineBorder(Color.BLACK, 1));
+
 
             JLabel emailLabel = new JLabel("Email:");
             emailLabel.setFont(new Font("Arial", Font.BOLD, 12));
 
             JTextField emailField = new JTextField(15);
             emailField.setBackground(Color.WHITE);
-            emailField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            emailField.setBorder(new LineBorder(Color.BLACK, 1));
 
             JLabel passLabel = new JLabel("Password:");
             passLabel.setFont(new Font("Arial", Font.BOLD, 12));
@@ -78,6 +82,7 @@ public class CreateAccPanel extends JFrame{
             JPasswordField passField = new JPasswordField(15);
             passField.setBackground(Color.WHITE);
             passField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            passField.setBorder(new LineBorder(Color.BLACK, 1));
 
             JCheckBox showPassword = new JCheckBox();
             showPassword.setOpaque(false);
@@ -89,6 +94,15 @@ public class CreateAccPanel extends JFrame{
 
             gbc.gridx = 0;
             gbc.gridy = 0;
+            gbc.gridwidth = 2;
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.insets = new Insets(0, 0, 10, 10);
+            formPanel.add(createLabel, gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.gridwidth = 1;
+            gbc.insets = new Insets(10, 0, 10, 30);
             gbc.anchor = GridBagConstraints.LINE_END;
             formPanel.add(userLabel, gbc);
 
@@ -98,7 +112,7 @@ public class CreateAccPanel extends JFrame{
             formPanel.add(userField, gbc);
 
             gbc.gridx = 0;
-            gbc.gridy = 1;
+            gbc.gridy = 2;
             gbc.anchor = GridBagConstraints.LINE_END;
             formPanel.add(emailLabel, gbc);
 
@@ -108,7 +122,7 @@ public class CreateAccPanel extends JFrame{
             formPanel.add(emailField, gbc);
 
             gbc.gridx = 0;
-            gbc.gridy = 2;
+            gbc.gridy = 3;
             gbc.anchor = GridBagConstraints.LINE_END;
             formPanel.add(passLabel, gbc);
 
@@ -122,13 +136,13 @@ public class CreateAccPanel extends JFrame{
             formPanel.add(showPassword, gbc);
 
             gbc.gridx = 1;
-            gbc.gridy = 3;
+            gbc.gridy = 4;
             gbc.anchor = GridBagConstraints.CENTER;
             formPanel.add(createAccountButton, gbc);
 
             // Tambahkan panel ke frame utama
             mainPanel.add(titlePanel, BorderLayout.NORTH);
-            mainPanel.add(formPanel, BorderLayout.CENTER);
+            mainPanel.add(formPanel, BorderLayout.EAST);
 
             showPassword.addActionListener(new ActionListener() {
                 @Override

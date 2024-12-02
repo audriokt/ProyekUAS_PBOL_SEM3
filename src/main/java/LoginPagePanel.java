@@ -97,7 +97,8 @@ public class LoginPagePanel extends JFrame {
         formPanel.add(loginLabel, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
         formPanel.add(userLabel, gbc);
 
@@ -107,7 +108,7 @@ public class LoginPagePanel extends JFrame {
         formPanel.add(userField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
         formPanel.add(passLabel, gbc);
 
