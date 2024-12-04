@@ -2,15 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.sql.*;
+import java.util.ArrayList;
 
-public class Cus_ProductListPage extends JFrame{
-    //ada panel yang nampilin logo, pencarian, dan cart
-    //ada panel yang nampilin promo yang bakal geser
-    //ada panel yang nampilin kategori barang dan gambar yang ada nama dan harga yang diambil dari data base
-    // gambar dapat di pencet dan akan menuju ke list barang pada kategori tersebut
-
+public class Cus_ProductListPage extends JFrame {
 
     private JLabel imageLabel;
     private int imageIndex = 0;
@@ -18,43 +13,92 @@ public class Cus_ProductListPage extends JFrame{
             "/images/Image_Promo_Gucci.png",
             "/images/Image_Promo_H&M.png",
             "/images/Image_Promo_Uniqlo.png",
-            "/images/Image_promo_Zara.png"
+            "/images/Image_Promo_Zara.png"
     };
 
-    //setup frame
+    // Setup frame
     public Cus_ProductListPage() {
         setTitle("Product List Page");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        //panel logo, pencarian, cart
-        // Label ODDIV di pojok kiri atas
+        // Panel logo, pencarian, cart
         ImageIcon logoOddiv = new ImageIcon(getClass().getResource("/images/Logo_Oddiv.png"));
-        // Mengubah ukuran ImageIcon
+        if (logoOddiv.getImageLoadStatus() != MediaTracker.COMPLETE) {
+            System.err.println("Logo image not found: /images/Logo_Oddiv.png");
+        }
         Image originalImage = logoOddiv.getImage();
-        Image scaledImage = originalImage.getScaledInstance(110, 70, Image.SCALE_SMOOTH);
+        Image scaledImage = originalImage.getScaledInstance(80, 50, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
 
-        //gambar cart
+        // Gambar cart
         ImageIcon cartIcon = new ImageIcon(getClass().getResource("/images/cart_Logo.png"));
+        if (cartIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
+            System.err.println("Cart image not found: /images/cart_Logo.png");
+        }
+        Image cartImage = cartIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledCartIcon = new ImageIcon(cartImage);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         JLabel logoLabel = new JLabel(scaledIcon);
-        JTextField searchField = new JTextField("Topi Zara", 15);
-        JButton cartButton = new JButton(cartIcon);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+        topPanel.add(logoLabel, gbc);
 
-        topPanel.add(logoLabel, BorderLayout.WEST);
-        topPanel.add(searchField, BorderLayout.CENTER);
-        topPanel.add(cartButton, BorderLayout.EAST);
+        // Search bar lebih kecil dan minimalis
+        JTextField searchField = new JTextField();
+        Dimension searchFieldSize = new Dimension(80, 25); // Ukuran lebih pendek
+        searchField.setPreferredSize(searchFieldSize);
+        searchField.setMinimumSize(searchFieldSize);
+        searchField.setMaximumSize(searchFieldSize);
+        searchField.setFont(new Font("Arial", Font.PLAIN, 14));
+        searchField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        searchField.setMargin(new Insets(2, 5, 2, 5));
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 10, 0, 10); // Menambahkan jarak antara logo dan search bar
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        topPanel.add(searchField, gbc);
 
-        //Panel untuk promo yang
-        JPanel promoPanel = new JPanel();
+        // Tombol "Cari" yang minimalis
+        JButton searchButton = new JButton("Cari");
+        searchButton.setPreferredSize(new Dimension(60, 25));
+        searchButton.setBackground(Color.BLACK);
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setFocusPainted(false);
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 10); // Menambahkan jarak antara search bar dan tombol cari
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        topPanel.add(searchButton, gbc);
+
+        // Cart button lebih kecil dan minimalis
+        JButton cartButton = new JButton(scaledCartIcon);
+        cartButton.setPreferredSize(new Dimension(30, 30));
+        cartButton.setContentAreaFilled(false);
+        cartButton.setBorderPainted(false);
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
+        topPanel.add(cartButton, gbc);
+
+        // Panel untuk promo yang
+        JPanel promoPanel = new JPanel(new BorderLayout());
         imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         updateImage();
 
-        promoPanel.add(imageLabel, BorderLayout.CENTER);
+        promoPanel.add(imageLabel, BorderLayout.NORTH);
 
         Timer timer = new Timer(5000, new ActionListener() {
             @Override
@@ -65,45 +109,78 @@ public class Cus_ProductListPage extends JFrame{
         });
         timer.start();
 
-        // Panel untuk kategori barang dan gambar yang ada nama dan harga
-        JPanel categoryPanel = new JPanel(new GridLayout(0, 3));
-        String[] categories = {"Elektronik", "Fashion", "Makanan"};
-        String[] images = {"image1.jpg", "image2.jpg", "image3.jpg"};
-        String[] prices = {"$100", "$50", "$20"};
+        // Product List panel
+        JPanel productListPanel = new JPanel(new GridLayout(1, 0, 10, 10));
+        JScrollPane scrollPane = new JScrollPane(productListPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        for (int i = 0; i < categories.length; i++) {
-            JPanel itemPanel = new JPanel(new BorderLayout());
-            JLabel imageLabel = new JLabel(new ImageIcon(getClass().getResource(images[i])));
-            JLabel nameLabel = new JLabel(categories[i]);
-            JLabel priceLabel = new JLabel(prices[i]);
-            itemPanel.add(imageLabel, BorderLayout.CENTER);
-            itemPanel.add(nameLabel, BorderLayout.NORTH);
-            itemPanel.add(priceLabel, BorderLayout.SOUTH);
+        // Mengambil data dari database dan menambahkannya ke panel produk
+        fetchAndDisplayProducts(productListPanel,"1");
 
-            // Menambahkan listener untuk mengklik gambar
-            imageLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    JOptionPane.showMessageDialog(null, "Menuju ke list barang dari kategori: " + nameLabel.getText());
-                    // Implementasi lebih lanjut untuk menampilkan list barang dari kategori tersebut
-                }
-            });
-
-            categoryPanel.add(itemPanel);
-        }
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH);
-        add(promoPanel,BorderLayout.CENTER);
-        add(categoryPanel,BorderLayout.SOUTH);
+        add(promoPanel, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.SOUTH);
+    }
+
+    private void fetchAndDisplayProducts(JPanel productListPanel, String cate) {
+        // Koneksi ke database
+        String url = "jdbc:oracle:thin:@localhost:1521/xe";
+        String username = "hr";
+        String password = "audri8802997";
+
+
+        String query = "SELECT name, image, price FROM products WHERE category = cate";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = pstmt.executeQuery();
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> images = new ArrayList<>();
+            ArrayList<String> prices = new ArrayList<>();
+
+            while (rs.next()) {
+                names.add(rs.getString("product_name"));
+                images.add(rs.getString("product_image"));
+                prices.add(rs.getString("product_price"));
+            }
+
+            for (int i = 0; i < names.size(); i++) {
+                JPanel productPanel = new JPanel(new BorderLayout());
+                ImageIcon productIcon = new ImageIcon(getClass().getResource(images.get(i)));
+                if (productIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
+                    System.err.println("Product image not found: " + images.get(i));
+                }
+                JLabel productImageLabel = new JLabel(productIcon);
+                JLabel productNameLabel = new JLabel(names.get(i), JLabel.CENTER);
+                productNameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+                JLabel productPriceLabel = new JLabel(prices.get(i), JLabel.CENTER);
+                productPriceLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+                productPanel.add(productImageLabel, BorderLayout.CENTER);
+                productPanel.add(productNameLabel, BorderLayout.NORTH);
+                productPanel.add(productPriceLabel, BorderLayout.SOUTH);
+
+                productListPanel.add(productPanel);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateImage() {
         ImageIcon icon = new ImageIcon(getClass().getResource(imagePaths[imageIndex]));
-        imageLabel.setIcon(icon);
+        if (icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+            imageLabel.setIcon(icon);
+        } else {
+            System.err.println("Promo image not found: " + imagePaths[imageIndex]);
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(()-> {
+        SwingUtilities.invokeLater(() -> {
             Cus_ProductListPage productListPage = new Cus_ProductListPage();
             productListPage.setVisible(true);
         });
